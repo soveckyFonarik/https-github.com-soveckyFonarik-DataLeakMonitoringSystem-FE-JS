@@ -1,46 +1,72 @@
-# Getting Started with Create React App
+# Система мониторинга утечек данных
+## этот проект состоит из наборов сервисов, которые взаимодействуют друг с другом.
+### Link (GitHub):
+-  [Главный БЭ сервис](https://github.com/soveckyFonarik/DataLeakMonitoringSystem-BE-JS)  
+- [Фронт](https://github.com/soveckyFonarik/https-github.com-soveckyFonarik-DataLeakMonitoringSystem-FE-JS)
+- [email Util](https://github.com/Kostya777i/email_util) - сервис для уведомления пользователя о утечке данных по почте
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Актуальность
 
-## Available Scripts
+инициализация виртуального окружения
+утечки данных ведут к финансовым потерям, репутационным рискам и кибератакам.
 
-In the project directory, you can run:
+Возможное применение:  коммерческие компании, госучреждения, граждане, которые часто не знают о компрометации своих данных.
 
-### `npm start`
+Ручной мониторинг неэффективен из-за объема информации в разных сервисах.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Описание задачи
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+> Необходимо разработать систему мониторинга утечек конфиденциальной информации в открытых источниках (соцсети, форумы, существующие открытые базы данных утечек). Система должна обнаруживать утечки по ключевым словам, доменам, email-адресам и другим идентификаторам, а также уведомлять пользователей о потенциальных угрозах.
+ ### Цель: 
+ >Создать прототип системы, способной автоматически > находить и анализировать утечки данных.
 
-### `npm test`
+### Задачи:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Анализировать открытые источники на предмет утечек.
 
-### `npm run build`
+- Фильтрация и классификация данных.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Оповещение пользователей (email, Telegram, веб-интерфейс).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Технический функционал
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Базовый функционал:
 
-### `npm run eject`
+- Поиск утечек по ключевым словам: доменам, email, номер телефона, логин.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Поддержка открытых источников данных
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- API для интеграции с другими системами.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Механизм оповещений (Telegram, email).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### Дополнительный:
 
-## Learn More
+- Анализ критичности (опасность утечки) реализовать возможность ранжирование и установки флагов на те сервисы и порталы учетные данные, которые критичны для пользователя.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Визуализация данных в дашборде.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Description
+устанавливаем [nodejs](https://nodejs.org/en/download)
+## Установка зависимостей
+> Добавьте .env файл из .env_example
+```bash
+$ npm install
+```
+
+## Запуск приложения
+
+```bash
+# development
+$ npm run start
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```

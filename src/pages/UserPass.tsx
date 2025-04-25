@@ -1,28 +1,66 @@
-import React, { useEffect } from 'react';
-import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Paper,
-  CircularProgress,
-  Typography,
-  Box,
-  Alert,
-} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, CircularProgress, Alert, Button } from '@mui/material';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchUserPasswords } from '../redux/slices/passwordsSlice';
+
+import PasswordCard from '../components/PasswordCard';
+import EditPasswordDialog from '../components/EditPasswordDialog';
+import DeletePasswordDialog from '../components/DeletePasswordDialog';
+
+interface Password {
+  id: number;
+  site: string;
+  login: string;
+  password: string;
+  notes?: string;
+}
 
 const UserPass: React.FC = () => {
   const dispatch = useAppDispatch();
   const { passwords, loading, error } = useAppSelector((state) => state.pass);
 
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [currentPass, setCurrentPass] = useState<Password | null>(null);
+
   useEffect(() => {
     dispatch(fetchUserPasswords());
   }, [dispatch]);
+
+  const handleEditOpen = (pass: Password) => {
+    setCurrentPass(pass);
+    setEditOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setEditOpen(false);
+    setCurrentPass(null);
+  };
+
+  const handleDeleteOpen = (pass: Password) => {
+    setCurrentPass(pass);
+    setDeleteOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+    setCurrentPass(null);
+  };
+
+  const handleSave = (data: { site: string; login: string; password: string; notes: string }) => {
+    if (!currentPass) return;
+    // TODO: dispatch update action
+    alert(`Сохранить изменения для id: ${currentPass.id}\n${JSON.stringify(data, null, 2)}`);
+    setEditOpen(false);
+  };
+
+  const handleDelete = () => {
+    if (!currentPass) return;
+    // TODO: dispatch delete action
+    alert(`Удалить пароль с id: ${currentPass.id}`);
+    setDeleteOpen(false);
+  };
 
   if (loading) {
     return (
@@ -40,40 +78,55 @@ const UserPass: React.FC = () => {
     );
   }
 
-  if (passwords.length === 0) {
-    return (
-      <Typography variant="h6" mt={4} align="center">
-        Пароли не найдены
-      </Typography>
-    );
-  }
-
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 900, margin: 'auto', mt: 4 }}>
-      <Typography variant="h5" sx={{ p: 2 }}>
-        Ваши пароли
-      </Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Сайт</TableCell>
-            <TableCell>Логин</TableCell>
-            <TableCell>Пароль</TableCell>
-            <TableCell>Примечания</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {passwords.map(({ id, site, login, password, notes }) => (
-            <TableRow key={id}>
-              <TableCell>{site}</TableCell>
-              <TableCell>{login}</TableCell>
-              <TableCell>{password}</TableCell>
-              <TableCell>{notes || '-'}</TableCell>
-            </TableRow>
+    <Box sx={{ maxWidth: 900, margin: 'auto', mt: 4, p: 2 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h5">Ваши пароли</Typography>
+        <Button variant="contained" color="primary" onClick={() => alert('Добавить новый пароль')}>
+          Добавить пароль
+        </Button>
+      </Box>
+
+      {passwords.length === 0 ? (
+        <Typography variant="h6" align="center" mt={4}>
+          Пароли не найдены
+        </Typography>
+      ) : (
+        <Box>
+          {passwords.map((pass: Password) => (
+            <PasswordCard
+              key={pass.id}
+              password={pass}
+              onEdit={handleEditOpen}
+              onDelete={handleDeleteOpen}
+            />
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        </Box>
+      )}
+
+      {currentPass && (
+        <EditPasswordDialog
+          open={editOpen}
+          onClose={handleEditClose}
+          onSave={handleSave}
+          initialData={{
+            site: currentPass.site,
+            login: currentPass.login,
+            password: currentPass.password,
+            notes: currentPass.notes || '',
+          }}
+        />
+      )}
+
+      {currentPass && (
+        <DeletePasswordDialog
+          open={deleteOpen}
+          onClose={handleDeleteClose}
+          onDelete={handleDelete}
+          siteName={currentPass.site}
+        />
+      )}
+    </Box>
   );
 };
 
