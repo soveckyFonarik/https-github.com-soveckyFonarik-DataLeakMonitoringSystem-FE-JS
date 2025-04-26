@@ -11,9 +11,9 @@ import {
 interface EditPasswordDialogProps {
   open: boolean;
   onClose: () => void;
-  onSave: (data: { site: string; login: string; password: string; notes: string }) => void;
+  onSave: (data: { host: string; login: string; password: string; notes: string }) => void;
   initialData: {
-    site: string;
+    host: string;
     login: string;
     password: string;
     notes: string;
@@ -47,9 +47,9 @@ const EditPasswordDialog: React.FC<EditPasswordDialogProps> = ({
         <TextField
           margin="normal"
           label="Сайт"
-          name="site"
+          name="host"
           fullWidth
-          value={formData.site}
+          value={formData.host}
           onChange={handleChange}
         />
         <TextField

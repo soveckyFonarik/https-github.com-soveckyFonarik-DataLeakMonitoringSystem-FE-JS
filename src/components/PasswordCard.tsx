@@ -3,7 +3,7 @@ import { Box, Typography, Button } from '@mui/material';
 
 interface Password {
   id: number;
-  site: string;
+  host: string;
   login: string;
   password: string;
   notes?: string;
@@ -16,7 +16,7 @@ interface PasswordCardProps {
 }
 
 const PasswordCard: React.FC<PasswordCardProps> = ({ password, onEdit, onDelete }) => {
-  const { site, login, notes, id } = password;
+  const { host, login, notes, id } = password;
 
   return (
     <Box
@@ -37,7 +37,7 @@ const PasswordCard: React.FC<PasswordCardProps> = ({ password, onEdit, onDelete 
         <Typography variant="subtitle2" color="textSecondary">
           Сайт
         </Typography>
-        <Typography>{site}</Typography>
+        <Typography>{host}</Typography>
       </Box>
 
       <Box sx={{ flex: 1, minWidth: 120 }}>

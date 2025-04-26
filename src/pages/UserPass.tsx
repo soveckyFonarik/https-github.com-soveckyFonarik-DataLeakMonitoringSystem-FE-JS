@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, CircularProgress, Alert, Button } from '@mui/material';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { fetchUserPasswords } from '../redux/slices/passwordsSlice';
+import { addUserPassword, deleteUserPassword, fetchUserPasswords, updateUserPassword } from '../redux/slices/passwordsSlice';
 
 import PasswordCard from '../components/PasswordCard';
 import EditPasswordDialog from '../components/EditPasswordDialog';
@@ -10,7 +10,7 @@ import DeletePasswordDialog from '../components/DeletePasswordDialog';
 
 interface Password {
   id: number;
-  site: string;
+  host: string;
   login: string;
   password: string;
   notes?: string;
@@ -20,6 +20,7 @@ const UserPass: React.FC = () => {
   const dispatch = useAppDispatch();
   const { passwords, loading, error } = useAppSelector((state) => state.pass);
 
+  const [addOpen, setAddOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [currentPass, setCurrentPass] = useState<Password | null>(null);
@@ -48,17 +49,40 @@ const UserPass: React.FC = () => {
     setCurrentPass(null);
   };
 
-  const handleSave = (data: { site: string; login: string; password: string; notes: string }) => {
+  const handleAddOpen = () => {
+    setAddOpen(true);
+    setCurrentPass(null); // сбрасываем выбранный пароль
+  };
+  
+  const handleAddClose = () => {
+    setAddOpen(false);
+  };
+
+  const handleAddSave = (data: { host: string; login: string; password: string; notes: string }) => {
+    dispatch(addUserPassword(data));
+  };
+
+  const handleSave = (data: { host?: string; login: string; password: string; notes: string }) => {
     if (!currentPass) return;
-    // TODO: dispatch update action
-    alert(`Сохранить изменения для id: ${currentPass.id}\n${JSON.stringify(data, null, 2)}`);
+    dispatch(updateUserPassword({
+      id: currentPass.id, // добавляем id
+      host: data.host,
+      login: data.login,
+      password: data.password,
+      // isLeaked: currentPass.isLeaked, // если нужно
+    }));
     setEditOpen(false);
   };
+
+  //  const handleLogin = (data: { username: string; password: string }) => {
+  //     dispatch(loginUser(data));
+  //   };
 
   const handleDelete = () => {
     if (!currentPass) return;
     // TODO: dispatch delete action
-    alert(`Удалить пароль с id: ${currentPass.id}`);
+    dispatch(deleteUserPassword(currentPass.id))
+    // alert(`Удалить пароль с id: ${currentPass.id}`);
     setDeleteOpen(false);
   };
 
@@ -82,7 +106,7 @@ const UserPass: React.FC = () => {
     <Box sx={{ maxWidth: 900, margin: 'auto', mt: 4, p: 2 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h5">Ваши пароли</Typography>
-        <Button variant="contained" color="primary" onClick={() => alert('Добавить новый пароль')}>
+        <Button variant="contained" color="primary" onClick={handleAddOpen}>
           Добавить пароль
         </Button>
       </Box>
@@ -110,7 +134,7 @@ const UserPass: React.FC = () => {
           onClose={handleEditClose}
           onSave={handleSave}
           initialData={{
-            site: currentPass.site,
+            host: currentPass.host,
             login: currentPass.login,
             password: currentPass.password,
             notes: currentPass.notes || '',
@@ -123,9 +147,22 @@ const UserPass: React.FC = () => {
           open={deleteOpen}
           onClose={handleDeleteClose}
           onDelete={handleDelete}
-          siteName={currentPass.site}
+          siteName={currentPass.host}
         />
       )}
+
+      {/* Диалог добавления */}
+      <EditPasswordDialog
+        open={addOpen}
+        onClose={handleAddClose}
+        onSave={handleAddSave}
+        initialData={{
+          host: '',
+          login: '',
+          password: '',
+          notes: '',
+        }}
+      />
     </Box>
   );
 };
