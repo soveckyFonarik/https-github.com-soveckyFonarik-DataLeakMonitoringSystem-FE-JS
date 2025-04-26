@@ -16,7 +16,7 @@ interface PasswordCardProps {
 }
 
 const PasswordCard: React.FC<PasswordCardProps> = ({ password, onEdit, onDelete }) => {
-  const { site, login, password: pass, notes, id } = password;
+  const { site, login, notes, id } = password;
 
   return (
     <Box
@@ -56,7 +56,7 @@ const PasswordCard: React.FC<PasswordCardProps> = ({ password, onEdit, onDelete 
         </Typography>
       </Box>
 
-      <Box sx={{ flex: 1, minWidth: 120 }}>
+      {/* <Box sx={{ flex: 1, minWidth: 120 }}>
         <Typography variant="subtitle2" color="textSecondary">
           Пароль
         </Typography>
@@ -70,7 +70,7 @@ const PasswordCard: React.FC<PasswordCardProps> = ({ password, onEdit, onDelete 
         >
           {pass}
         </Typography>
-      </Box>
+      </Box> */}
 
       <Box sx={{ flex: 1, minWidth: 120 }}>
         <Typography variant="subtitle2" color="textSecondary">
